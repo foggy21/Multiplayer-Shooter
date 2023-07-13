@@ -7,6 +7,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 {
     [SerializeField] private TextMeshProUGUI createInput;
     [SerializeField] private TextMeshProUGUI joinInput;
+    [SerializeField] private TextMeshProUGUI nickNameInput;
 
     public void CreateRoom()
     {
@@ -22,6 +23,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
+        PhotonNetwork.NickName = nickNameInput.text;
         PhotonNetwork.LoadLevel("Game");
     }
 }

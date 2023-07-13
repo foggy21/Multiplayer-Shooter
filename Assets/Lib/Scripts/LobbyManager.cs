@@ -1,13 +1,12 @@
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
+using TMPro;
 
 public class LobbyManager : MonoBehaviourPunCallbacks
 {
-    [SerializeField] private InputField createInput;
-    [SerializeField] private InputField joinInput;
+    [SerializeField] private TextMeshProUGUI createInput;
+    [SerializeField] private TextMeshProUGUI joinInput;
 
     public void CreateRoom()
     {

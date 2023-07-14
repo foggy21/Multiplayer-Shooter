@@ -21,27 +21,28 @@ public class JoystickController : MonoBehaviour
         if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
-            if (touch.phase == TouchPhase.Began)
+            if (Camera.main.ScreenToWorldPoint(touch.position).x > Camera.main.transform.position.x)
             {
-                joystickStartPosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.transform.position.z));
-                joystickFrame.transform.position = joystickStartPosition;
-                joystickButton.transform.position = joystickStartPosition;
-            }
-            if (touch.phase == TouchPhase.Moved)
-            {
-                touchStart = true;
-                joystickEndPosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.transform.position.z));
+                if (touch.phase == TouchPhase.Began)
+                {
+                    joystickStartPosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.transform.position.z));
+                    joystickFrame.transform.position = joystickStartPosition;
+                    joystickButton.transform.position = joystickStartPosition;
+                }
+                if (touch.phase == TouchPhase.Moved)
+                {
+                    touchStart = true;
+                    joystickEndPosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.transform.position.z));
 
-            }
-            else if (touch.phase == TouchPhase.Ended)
-            {
-                touchStart = false;
-                joystickFrame.transform.position = joystickOriginalPosition;
-                joystickButton.transform.position = joystickOriginalPosition;
-            }
+                }
+                else if (touch.phase == TouchPhase.Ended)
+                {
+                    touchStart = false;
+                    joystickFrame.transform.position = joystickOriginalPosition;
+                    joystickButton.transform.position = joystickOriginalPosition;
+                }
+            }   
         }
-
-
     }
 
     private void FixedUpdate()
@@ -51,7 +52,10 @@ public class JoystickController : MonoBehaviour
             Vector2 offset = joystickEndPosition - joystickStartPosition;
             Vector2 direction = Vector2.ClampMagnitude(offset, 1.0f);
             joystickButton.transform.position = new Vector2(joystickStartPosition.x + direction.x, joystickStartPosition.y + direction.y);
-            OnPlayerMove.Invoke(direction);
+            if (OnPlayerMove != null)
+            {
+                OnPlayerMove.Invoke(direction);
+            }
         }
     }
 }

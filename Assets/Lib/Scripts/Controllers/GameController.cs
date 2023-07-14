@@ -1,6 +1,7 @@
 using Photon.Pun;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameController : MonoBehaviourPun
 {
@@ -10,12 +11,15 @@ public class GameController : MonoBehaviourPun
     [SerializeField] private ShootController shootController;
     [SerializeField] private CameraController cameraController;
     [SerializeField] private TextMeshProUGUI moneyCount;
+    [SerializeField] private Image healthBar;
+    [SerializeField] private GameObject winPopUp;
+    [SerializeField] private TextMeshProUGUI winner;
+    [SerializeField] private TextMeshProUGUI moneyCollected;
     [SerializeField] private float startCoinTimeInstantiate;
     private float currentCoinTimeInstantiate;
     private PlayerPresenter playerPresenter;
     private PlayerModel playerModel;
     private bool gameStart = false;
-    private bool gameEnd = false;
 
     private void Awake()
     {
@@ -28,6 +32,7 @@ public class GameController : MonoBehaviourPun
         playerView.PlayerPresenter = playerPresenter;
         playerView.JoystickController = joystickController;
         playerView.ShootController = shootController;
+        playerView.HealthBar = healthBar;
         playerView.Enable();
         playerView.OnCoinGet += SetMoneyCount;
     }
@@ -50,7 +55,10 @@ public class GameController : MonoBehaviourPun
         if (gameStart && PhotonNetwork.PlayerList.Length < 2)
         {
             Debug.Log("Game End");
-            gameEnd = true;
+            gameStart = false;
+            winPopUp.SetActive(true);
+            winner.text = $"Winner: {PhotonNetwork.PlayerList[0].NickName}";
+            moneyCollected.text = moneyCount.text;
         }
     }
 
@@ -65,7 +73,6 @@ public class GameController : MonoBehaviourPun
         GameObject prefabObject = PhotonNetwork.Instantiate(prefabName, randomPosition, Quaternion.identity);
         if (PhotonNetwork.PlayerList.Length > 1)
         {
-            Debug.Log("Game Start");
             gameStart = true;
         }
         return prefabObject;

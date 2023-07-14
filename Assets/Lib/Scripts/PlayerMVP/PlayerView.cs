@@ -6,18 +6,20 @@ using UnityEngine.UI;
 
 public class PlayerView : MonoBehaviourPun
 {
-    [SerializeField] private Image healthBar;
+    
     [SerializeField] private GameObject bullet;
     [SerializeField] private float fireStartDistance;
     private PhotonView view;
     private TextMeshProUGUI nickName;
     private Canvas canvas;
+    private Image healthBar;
     private JoystickController joystickController;
     private ShootController shootController;
     private PlayerPresenter playerPresenter;
 
     public Action OnCoinGet;
     public Action<float> OnBulletCollide;
+    public Image HealthBar { get => healthBar; set { if (healthBar == null) healthBar = value; } }
     public PlayerPresenter PlayerPresenter { get => playerPresenter; set { if (playerPresenter == null) playerPresenter = value; } }
     public JoystickController JoystickController { get => joystickController; set { if (joystickController == null) joystickController = value; } }
     public ShootController ShootController { get => shootController; set { if (shootController == null) shootController = value; } }

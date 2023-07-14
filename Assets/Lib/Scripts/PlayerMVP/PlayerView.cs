@@ -17,6 +17,7 @@ public class PlayerView : MonoBehaviourPun
     private ShootController shootController;
     private PlayerPresenter playerPresenter;
 
+    public Action OnPlayerDestroy;
     public Action OnCoinGet;
     public Action<float> OnBulletCollide;
     public Image HealthBar { get => healthBar; set { if (healthBar == null) healthBar = value; } }
@@ -43,11 +44,8 @@ public class PlayerView : MonoBehaviourPun
 
     public void InstantiateBullet()
     {
-        if (gameObject != null)
-        {
-            GameObject bulletObject = PhotonNetwork.Instantiate(bullet.name, transform.position, transform.rotation);
-            Physics2D.IgnoreCollision(bulletObject.GetComponent<Collider2D>(), GetComponent<Collider2D>());
-        }
+        GameObject bulletObject = PhotonNetwork.Instantiate(bullet.name, transform.position, transform.rotation);
+        Physics2D.IgnoreCollision(bulletObject.GetComponent<Collider2D>(), GetComponent<Collider2D>());
     }
 
     public void Enable()
@@ -64,6 +62,7 @@ public class PlayerView : MonoBehaviourPun
     {
         joystickController.OnPlayerMove -= Move;
         shootController.OnShoot -= InstantiateBullet;
+        OnPlayerDestroy.Invoke();
         PhotonNetwork.Destroy(gameObject);
     }
 

@@ -31,6 +31,7 @@ public class Bullet : MonoBehaviourPun
             collision.GetComponent<PlayerView>().OnBulletCollide.Invoke(damage);
         }
     }
+
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.GetComponent<PlayerView>() != null)

@@ -1,4 +1,5 @@
 using Photon.Pun;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -20,6 +21,8 @@ public class GameController : MonoBehaviourPun
     private PlayerPresenter playerPresenter;
     private PlayerModel playerModel;
     private bool gameStart = false;
+    private int destroyedPlayers = 0;
+
 
     private void Awake()
     {
@@ -35,6 +38,7 @@ public class GameController : MonoBehaviourPun
         playerView.HealthBar = healthBar;
         playerView.Enable();
         playerView.OnCoinGet += SetMoneyCount;
+        playerView.OnPlayerDestroy += IncrementDestroyedPlayers;
     }
 
     private void Update()
@@ -52,7 +56,7 @@ public class GameController : MonoBehaviourPun
             }
         }
 
-        if (gameStart && PhotonNetwork.PlayerList.Length < 2)
+        if (gameStart && PhotonNetwork.PlayerList.Length - destroyedPlayers == 1)
         {
             Debug.Log("Game End");
             gameStart = false;
@@ -60,6 +64,11 @@ public class GameController : MonoBehaviourPun
             winner.text = $"Winner: {PhotonNetwork.PlayerList[0].NickName}";
             moneyCollected.text = moneyCount.text;
         }
+    }
+
+    private void IncrementDestroyedPlayers()
+    {
+        destroyedPlayers++;
     }
 
     private void SetMoneyCount()

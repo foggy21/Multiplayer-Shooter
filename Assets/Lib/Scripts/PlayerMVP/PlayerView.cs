@@ -2,10 +2,11 @@ using UnityEngine;
 using Photon.Pun;
 using TMPro;
 
-public class PlayerView : MonoBehaviour
+public class PlayerView : MonoBehaviourPun
 {
     private PhotonView view;
     private TextMeshProUGUI nickName;
+    private Canvas canvas;
     private JoystickController joystickController;
     private PlayerPresenter playerPresenter;
     public PlayerPresenter PlayerPresenter { get => playerPresenter; set { if (playerPresenter == null) playerPresenter = value; } }
@@ -16,6 +17,7 @@ public class PlayerView : MonoBehaviour
         if (view.IsMine)
         {
             playerPresenter.Move(direction);
+            canvas.transform.rotation = Quaternion.identity;
         }
     }
 
@@ -24,6 +26,7 @@ public class PlayerView : MonoBehaviour
         joystickController.OnPlayerMove += Move;
         view = GetComponent<PhotonView>();
         nickName = GetComponentInChildren<TextMeshProUGUI>();
-        nickName.text = view.Owner.NickName;
+        canvas = GetComponentInChildren<Canvas>();
+        nickName.text = photonView.Owner.NickName;
     }
 }
